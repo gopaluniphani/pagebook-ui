@@ -20,6 +20,9 @@ import Profile from "../components/Profile";
 import Register from "../components/Register";
 import Search from "../components/Search";
 import User from "../components/User";
+import StoryFeed from "../components/StoryFeed";
+import AddBusiness from "../components/AddBusiness";
+import FriendsList from "../components/FriendsList";
 
 Vue.component("nav-bar", NavBar);
 Vue.component("post", Post);
@@ -36,6 +39,9 @@ Vue.component("profile", Profile);
 Vue.component("register", Register);
 Vue.component("search", Search);
 Vue.component("user", User);
+Vue.component("storyfeed", StoryFeed);
+Vue.component("addBusiness", AddBusiness);
+Vue.component("friendsList", FriendsList);
 
 Vue.use(Router);
 Vue.use(BootstrapVue);
@@ -95,6 +101,24 @@ export default new Router({
       name: "addStory",
       component: AddStory,
       meta: { title: "AddStory" },
+    },
+    {
+      path: "/storyfeed",
+      name: "storyfeed",
+      component: StoryFeed,
+      meta: { title: "Story Feed" },
+    },
+    {
+      path: "/addBusiness",
+      name: "addBusiness",
+      component: AddBusiness,
+      meta: { title: "Add Business" },
+    },
+    {
+      path: "/friendsList",
+      name: "friendsList",
+      component: FriendsList,
+      meta: { title: "Friends List" },
     },
   ],
 });
