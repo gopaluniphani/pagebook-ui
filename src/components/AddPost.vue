@@ -93,7 +93,7 @@ export default {
         postData.fileType = "text";
         const postUrl = store.state.API_LOCATION + "/post/";
         axios
-          .post(postUrl, postData)
+          .post(postUrl, postData, store.state.getTokenConfig())
           .then((res) => res.data)
           .then((data) => {
             console.log(data);
@@ -122,7 +122,7 @@ export default {
               postData.fileURL = this.imgUrl;
               const postUrl = store.state.API_LOCATION + "/post/";
               axios
-                .post(postUrl, postData)
+                .post(postUrl, postData, store.state.getTokenConfig())
                 .then((res) => res.data)
                 .then((data) => {
                   console.log(data);

@@ -180,65 +180,89 @@ export default {
         console.log(this.imageData);
         this.imgUrl = null;
         if (this.imageData !== null) {
-          const storageRef = firebase
-            .storage()
-            .ref(`${this.imageData.name} ${Date()}`)
-            .put(this.imageData);
-          storageRef.on(
-            `state_changed`,
-            (snapshot) => {
-              this.uploadValue =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            },
-            (error) => {
-              console.log(error.message);
-            },
-            () => {
-              this.uploadValue = 100;
-              storageRef.snapshot.ref.getDownloadURL().then((url) => {
-                this.imgUrl = url;
-                console.log(this.imgUrl);
-                const postUrl = store.state.API_LOCATION + "/profile/save";
-                const data = {
-                  imgUrl: this.imgUrl,
-                  firstName: this.firstName,
-                  lastName: this.lastName,
-                  email: this.email,
-                  bio: this.bio,
-                  profileType: this.profileType,
-                  interest: this.interests,
-                  totalFriends: 0,
-                };
-                console.log(data);
-                axios
-                  .post(postUrl, data)
-                  .then((res) => res.data)
-                  .then((data) => {
-                    console.log(data);
-                    this.$router.push("/");
-                  });
-              });
-            }
-          );
-        } else {
-          const postUrl = store.state.API_LOCATION + "/profile/save";
-          const data = {
-            imageUrl: "",
-            firstName: this.firstName,
-            lastName: this.lastName,
-            email: this.email,
-            bio: this.bio,
-            profileType: this.profileType,
-            interests: this.interests,
-            totalFriends: 0,
-          };
-          console.log(data);
           axios
-            .post(postUrl, data)
+            .post(`${store.state.AUTH_LOCATION}/register`, {
+              username: this.email,
+              password: this.password,
+              client: "pagebook",
+              roles: ["pagebook"],
+            })
             .then((res) => res.data)
             .then((data) => {
               console.log(data);
-              this.$router.push("/");
+              localStorage.setItem("token", data.data.jwt);
+              const storageRef = firebase
+                .storage()
+                .ref(`${this.imageData.name} ${Date()}`)
+                .put(this.imageData);
+              storageRef.on(
+                `state_changed`,
+                (snapshot) => {
+                  this.uploadValue =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                },
+                (error) => {
+                  console.log(error.message);
+                },
+                () => {
+                  this.uploadValue = 100;
+                  storageRef.snapshot.ref.getDownloadURL().then((url) => {
+                    this.imgUrl = url;
+                    console.log(this.imgUrl);
+                    const postUrl = store.state.API_LOCATION + "/profile/save";
+                    const data = {
+                      imgUrl: this.imgUrl,
+                      firstName: this.firstName,
+                      lastName: this.lastName,
+                      email: this.email,
+                      bio: this.bio,
+                      profileType: this.profileType,
+                      interest: this.interests,
+                      totalFriends: 0,
+                    };
+                    console.log(data);
+                    axios
+                      .post(postUrl, data, store.state.getTokenConfig())
+                      .then((res) => res.data)
+                      .then((data) => {
+                        console.log(data);
+                        this.$router.push("/");
+                      });
+                  });
+                }
+              );
+            });
+        } else {
+          axios
+            .post(`${store.state.AUTH_LOCATION}/register`, {
+              username: this.email,
+              password: this.password,
+              client: "pagebook",
+              roles: ["pagebook"],
+            })
+            .then((res) => res.data)
+            .then((data) => {
+              console.log(data);
+              localStorage.setItem("token", data.data.jwtToken);
+              const postUrl = store.state.API_LOCATION + "/profile/save";
+              const userData = {
+                imageUrl: "",
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                bio: this.bio,
+                profileType: this.profileType,
+                interests: this.interests,
+                totalFriends: 0,
+              };
+              console.log(userData);
+              axios
+                .post(postUrl, userData, store.state.getTokenConfig())
+                .then((res) => res.data)
+                .then((user) => {
+                  console.log(user);
+                  this.$router.push("/");
+                });
             });
         }
       }

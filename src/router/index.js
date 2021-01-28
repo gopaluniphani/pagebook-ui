@@ -7,9 +7,8 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import NavBar from "../components/common/NavBar";
 import Post from "../components/common/Post";
-import Story from "../components/common/Story";
-import Feed from "../components/common/Feed";
-import Stories from "../components/common/Stories";
+import Comment from "../components/common/Comment";
+import UnApprovedPost from "../components/common/UnApprovedPost";
 
 import AddPost from "../components/AddPost";
 import AddStory from "../components/AddStory";
@@ -26,9 +25,8 @@ import FriendsList from "../components/FriendsList";
 
 Vue.component("nav-bar", NavBar);
 Vue.component("post", Post);
-Vue.component("story", Story);
-Vue.component("feed", Feed);
-Vue.component("stories", Stories);
+Vue.component("comment", Comment);
+Vue.component("unApprovedPost", UnApprovedPost);
 
 Vue.component("addPost", AddPost);
 Vue.component("addStory", AddStory);

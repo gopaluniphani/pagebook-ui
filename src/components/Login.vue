@@ -60,6 +60,7 @@ export default {
     };
   },
   mounted() {
+    console.log("inside login mounted", store.state.logout);
     if (store.state.logout === false) {
       this.$router.push("/home");
     }
@@ -68,25 +69,43 @@ export default {
     login: function () {
       const getUrl =
         store.state.API_LOCATION + `/profile/userProfile/${this.email}`;
+      const authUrl = `${store.state.AUTH_LOCATION}/authenticate`;
       axios
-        .get(getUrl)
-        .then((res) => {
-          console.log(res);
-          return res.data;
+        .post(authUrl, {
+          username: this.email,
+          password: this.password,
+          client: "pagebook",
         })
-        .then((data) => {
-          console.log(data);
-          if (data === null) {
-            alert("user doesn't exist");
-          } else {
-            console.log(data);
-            store.state.userDetails = data;
-            localStorage.setItem("userId", data.userId);
-            store.state.logout = false;
-            this.$router.push("/home");
+        .then((res) => res.data)
+        .then((authData) => {
+          console.log(authData);
+          if (authData.success === false) {
+            alert(authData.error);
+            this.email = "";
+            this.password = "";
+            return;
           }
-        })
-        .catch((err) => console.log(err));
+          localStorage.setItem("token", authData.data.jwt);
+          axios
+            .get(getUrl, store.state.getTokenConfig())
+            .then((res) => {
+              console.log(res);
+              return res.data;
+            })
+            .then((data) => {
+              console.log(data);
+              if (data === null) {
+                alert("user doesn't exist");
+              } else {
+                console.log(data);
+                store.state.userDetails = data;
+                localStorage.setItem("userId", data.userId);
+                store.state.logout = false;
+                this.$router.push("/home");
+              }
+            })
+            .catch((err) => console.log(err));
+        });
     },
   },
 };

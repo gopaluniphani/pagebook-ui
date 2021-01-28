@@ -48,6 +48,9 @@ export default {
   methods: {
     logout: function () {
       localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+      localStorage.removeItem("profileId");
+      localStorage.removeItem("businessId");
       store.state.logout = true;
       this.$router.push("/");
     },

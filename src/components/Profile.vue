@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-4">
+        <div class="col-lg-4">
           <table class="table" style="caption-side: top">
             <caption>
               User Details
@@ -46,7 +46,7 @@
             </tbody>
           </table>
         </div>
-        <div class="col-8">
+        <div class="col-lg-8">
           <div class="row">
             <div class="col-3">
               <router-link to="/addPost">
@@ -69,6 +69,15 @@
               </router-link>
             </div>
           </div>
+          <div class="row m-5">
+            <div
+              v-for="(postDto, k) in postDtos"
+              :key="k"
+              class="row mx-5 mb-5"
+            >
+              <post v-bind:postDto="postDto" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -77,17 +86,30 @@
 
 <script>
 import store from "../store";
+import axios from "axios";
 
 export default {
+  name: "profile",
   data() {
     return {
       userProfile: store.state.userDetails,
+      postDtos: [],
     };
   },
   mounted() {
     if (store.state.logout === true) {
       this.$router.push("/");
     }
+    const postsUrl = `${
+      store.state.API_LOCATION
+    }/post/getUsersPost/${localStorage.getItem("userId")}`;
+    axios
+      .get(postsUrl, store.state.getTokenConfig())
+      .then((res) => res.data)
+      .then((data) => {
+        console.log(data);
+        this.postDtos = data;
+      });
   },
 };
 </script>

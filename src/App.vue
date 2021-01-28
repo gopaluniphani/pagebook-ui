@@ -11,13 +11,13 @@ import axios from "axios";
 
 export default {
   name: "app",
-  mounted() {
+  beforeMount() {
     let userId = localStorage.getItem("userId");
     if (userId !== null) {
       const getUrl = `${store.state.API_LOCATION}/profile/userProfileById/${userId}`;
       store.state.logout = false;
       axios
-        .get(getUrl)
+        .get(getUrl, store.state.getTokenConfig())
         .then((res) => res.data)
         .then((data) => {
           console.log(data);

@@ -77,11 +77,11 @@ export default {
               storyData.fileUrl = this.imgUrl;
               const postUrl = store.state.API_LOCATION + "/story/";
               axios
-                .post(postUrl, storyData)
+                .post(postUrl, storyData, store.state.getTokenConfig())
                 .then((res) => res.data)
                 .then((data) => {
                   console.log(data);
-                  this.$router.push("/profile");
+                  this.$router.push("/storyfeed");
                 });
             });
           }
