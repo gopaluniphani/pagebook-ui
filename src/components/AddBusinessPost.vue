@@ -91,7 +91,7 @@ export default {
         fileType: "",
       };
       if (this.imageData === null) {
-        postData.fileUrl = this.text;
+        postData.fileURL = this.text;
         postData.fileType = "text";
         const postUrl = store.state.API_LOCATION + "/post/";
         axios

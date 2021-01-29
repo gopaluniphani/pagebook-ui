@@ -13,7 +13,8 @@
             placeholder="Write Your Reply Here"
           />
           <comment
-            class="mx-2"
+            :key="replyKey"
+            class="mx-5"
             v-bind:parentCommentId="comment.comment.commentId"
             v-bind:postId="postId"
           />
@@ -41,6 +42,7 @@ export default {
     return {
       comments: [],
       hasComments: false,
+      replyKey: 0,
     };
   },
   methods: {
@@ -54,7 +56,7 @@ export default {
         userId: localStorage.getItem("userId"),
       };
       axios.post(url, commentData, store.state.getTokenConfig()).then((res) => {
-        this.reply = "";
+        this.replyKey += 1;
         console.log(res.data);
       });
     },

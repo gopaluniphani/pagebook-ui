@@ -23,12 +23,16 @@ import User from "../components/User";
 import StoryFeed from "../components/StoryFeed";
 import AddBusiness from "../components/AddBusiness";
 import FriendsList from "../components/FriendsList";
+import Ads from "../components/common/Ads"
+import Notifications from "../components/Notifications"
 
 Vue.component("nav-bar", NavBar);
 Vue.component("post", Post);
 Vue.component("comment", Comment);
 Vue.component("unApprovedPost", UnApprovedPost);
 
+Vue.component("Ads", Ads);
+Vue.component("notifications", Notifications);
 Vue.component("addPost", AddPost);
 Vue.component("addBusinessPost", AddBusinessPost);
 Vue.component("addStory", AddStory);
@@ -125,6 +129,12 @@ export default new Router({
       name: "friendsList",
       component: FriendsList,
       meta: { title: "Friends List" },
+    },
+    {
+      path: "/notifications",
+      name: "notifications",
+      component: Notifications,
+      meta: { title: "Notifications" },
     },
   ],
 });

@@ -8,6 +8,11 @@
       </router-link>
     </span>
     <span v-if="!this.logoutStatus">
+      <router-link to="/notifications">
+        <button class="btn btn-outline-light mx-2 my-2 my-sm-0">
+          Notifications
+        </button>
+      </router-link>
       <router-link to="/search">
         <button class="btn btn-outline-light mx-2 my-2 my-sm-0">Search</button>
       </router-link>

@@ -158,7 +158,7 @@ export default {
 
       axios
         .get(
-          `${store.state.API_LOCATION}/moderators/${businessId}`,
+          `${store.state.API_LOCATION}/business/moderators/${businessId}`,
           store.state.getTokenConfig()
         )
         .then((res) => res.data)
@@ -174,7 +174,7 @@ export default {
           }
         });
 
-      this.loadApprovedPosts();
+      // this.loadApprovedPosts();
     }
   },
   methods: {

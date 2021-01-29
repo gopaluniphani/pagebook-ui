@@ -27,6 +27,7 @@
             placeholder="Enter password"
             v-model="password"
             type="password"
+            v-on:keyup.enter="login"
           />
         </div>
 
