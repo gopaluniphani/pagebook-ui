@@ -9,11 +9,11 @@
           <i class="fas fa-comment-alt fa-1x"></i>
           <input
             type="text"
-            v-model="reply"
-            v-on:keyup.enter="postReply(comment.comment.commentId)"
+            v-on:keyup.enter="postReply($event, comment.comment.commentId)"
             placeholder="Write Your Reply Here"
           />
           <comment
+            class="mx-2"
             v-bind:parentCommentId="comment.comment.commentId"
             v-bind:postId="postId"
           />
@@ -41,27 +41,22 @@ export default {
     return {
       comments: [],
       hasComments: false,
-      reply: "",
     };
   },
   methods: {
-    postReply: function (parentCommentId) {
+    postReply: function (event, parentCommentId) {
       const url = `${store.state.API_LOCATION}/post/addComment`;
-      axios
-        .post(
-          url,
-          {
-            text: this.reply,
-            postId: this.postId,
-            parentCommentId: parentCommentId,
-            userId: localStorage.getItem("userId"),
-          },
-          store.state.getTokenConfig()
-        )
-        .then((res) => {
-          this.reply = "";
-          console.log(res.data);
-        });
+      const reply = event.target.value;
+      const commentData = {
+        text: reply,
+        postId: this.postId,
+        parentCommentId: parentCommentId,
+        userId: localStorage.getItem("userId"),
+      };
+      axios.post(url, commentData, store.state.getTokenConfig()).then((res) => {
+        this.reply = "";
+        console.log(res.data);
+      });
     },
   },
   mounted() {

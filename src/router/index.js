@@ -11,6 +11,7 @@ import Comment from "../components/common/Comment";
 import UnApprovedPost from "../components/common/UnApprovedPost";
 
 import AddPost from "../components/AddPost";
+import AddBusinessPost from "../components/AddBusinessPost";
 import AddStory from "../components/AddStory";
 import Business from "../components/Business";
 import Home from "../components/Home";
@@ -29,6 +30,7 @@ Vue.component("comment", Comment);
 Vue.component("unApprovedPost", UnApprovedPost);
 
 Vue.component("addPost", AddPost);
+Vue.component("addBusinessPost", AddBusinessPost);
 Vue.component("addStory", AddStory);
 Vue.component("business", Business);
 Vue.component("home", Home);
@@ -93,6 +95,12 @@ export default new Router({
       name: "addPost",
       component: AddPost,
       meta: { title: "AddPost" },
+    },
+    {
+      path: "/addBusinessPost",
+      name: "addBusinessPost",
+      component: AddBusinessPost,
+      meta: { title: "AddBusinessPost" },
     },
     {
       path: "/addStory",

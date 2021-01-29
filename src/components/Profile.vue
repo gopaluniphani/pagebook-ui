@@ -16,8 +16,8 @@
       </div>
       <div class="row">
         <div class="col-lg-4">
-          <table class="table" style="caption-side: top">
-            <caption>
+          <table class="table">
+            <caption style="caption-side: top">
               User Details
             </caption>
             <tbody>

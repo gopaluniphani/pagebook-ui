@@ -81,7 +81,6 @@ export default {
           console.log(authData);
           if (authData.success === false) {
             alert(authData.error);
-            this.email = "";
             this.password = "";
             return;
           }

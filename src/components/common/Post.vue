@@ -1,17 +1,17 @@
 <template>
   <div class="post">
     <div class="profile">
-      <img class="mb-2" :src="postDto.userImgUrl" />
-      <h3>{{ postDto.userName }}</h3>
+      <img class="mb-2" :src="postDto.userImgURL" />
+      <h3 class="mt-2">{{ postDto.userName }}</h3>
     </div>
-    <div class="postimg">
+    <div class="postimg mb-2">
       <img
         v-if="postDto.post.fileType.toLowerCase() === 'image'"
         :src="postDto.post.fileURL"
       />
       <textarea v-else disabled v-model="postDto.post.fileURL"></textarea>
     </div>
-    <div class="like">
+    <div class="like mb-2">
       <i class="fa fa-heart fa-2x red" v-if="like" @click="likePost"></i>
       <i class="far fa-heart fa-2x" v-else @click="likePost"></i>
       <i
@@ -28,8 +28,8 @@
         @click="happyReaction"
       ></i>
       <i class="far fa-grin-stars fa-2x" v-else @click="happyReaction"></i>
-      <i class="fab fa-telegram-plane fa-2x"></i>
     </div>
+    <button class="btn btn-light" v-on:click="sharePost">Share</button>
     <div class="comment">
       <i class="fas fa-comment-alt fa-1x"></i>
       <input
@@ -39,7 +39,11 @@
         placeholder="Write Your Comment Here"
       />
     </div>
-    <comment v-bind:parentCommentId="'1'" v-bind:postId="postDto.post.postId" />
+    <comment
+      :key="commentKey"
+      v-bind:parentCommentId="'1'"
+      v-bind:postId="postDto.post.postId"
+    />
   </div>
 </template>
 
@@ -61,6 +65,7 @@ export default {
       sad: false,
       happy: false,
       comment: "",
+      commentKey: 0,
     };
   },
   mounted() {
@@ -104,17 +109,13 @@ export default {
     },
     updateActionCall(action) {
       const url = `${store.state.API_LOCATION}/post/addAction`;
-      axios.post(
-        url,
-        {
-          actionId: null,
-          postId: this.postDto.post.postId,
-          userId: this.postDto.post.userId,
-          actionType: action,
-          actionTime: null,
-        },
-        store.state.getTokenConfig()
-      );
+      const actionData = {
+        postId: this.postDto.post.postId,
+        userId: localStorage.getItem("userId"),
+        actionType: action,
+      };
+      console.log(actionData);
+      axios.post(url, actionData, store.state.getTokenConfig());
     },
     postComment() {
       const url = `${store.state.API_LOCATION}/post/addComment`;
@@ -131,6 +132,26 @@ export default {
         )
         .then((res) => {
           console.log(res);
+          this.comment = "";
+          this.commentKey += 1;
+        });
+    },
+    sharePost() {
+      console.log("inside share post");
+      let postData = {
+        postCategory: this.postDto.post.postCategory,
+        fileURL: this.postDto.post.fileURL,
+        userId: localStorage.getItem("userId"),
+        profileType: store.state.userDetails.profileType,
+        fileType: this.postDto.post.fileType,
+      };
+      const postUrl = store.state.API_LOCATION + "/post/";
+      axios
+        .post(postUrl, postData, store.state.getTokenConfig())
+        .then((res) => res.data)
+        .then((data) => {
+          console.log(data);
+          alert("post shared");
         });
     },
   },

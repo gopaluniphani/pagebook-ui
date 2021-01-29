@@ -6,18 +6,6 @@
         <div class="col-3"></div>
         <div class="col-6">
           <div class="row">
-            <div class="col-6">
-              <router-link to="/addPost">
-                <button class="btn btn-light">Add Post</button>
-              </router-link>
-            </div>
-            <div class="col-6">
-              <router-link to="/addStory">
-                <button class="btn btn-light">Add Story</button>
-              </router-link>
-            </div>
-          </div>
-          <div class="row">
             <div class="row m-5">
               <div
                 v-for="(postDto, k) in postDtos"

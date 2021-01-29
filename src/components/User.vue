@@ -50,7 +50,7 @@
                     Friends
                   </button>
                   <button
-                    v-if="isNotFriend"
+                    v-if="!isFriend"
                     class="btn btn-light"
                     v-on:click="addFriend()"
                   >
@@ -62,28 +62,6 @@
           </table>
         </div>
         <div class="col-lg-8">
-          <div class="row">
-            <div class="col-3">
-              <router-link to="/addPost">
-                <button class="btn btn-light">Add Post</button>
-              </router-link>
-            </div>
-            <div class="col-3">
-              <router-link to="/addStory">
-                <button class="btn btn-light">Add Story</button>
-              </router-link>
-            </div>
-            <div class="col-3">
-              <router-link to="/addBusiness">
-                <button class="btn btn-light">Create Business Page</button>
-              </router-link>
-            </div>
-            <div class="col-3">
-              <router-link to="/friendsList">
-                <button class="btn btn-light">Friends List</button>
-              </router-link>
-            </div>
-          </div>
           <div v-if="isPublic" class="row m-5">
             <div
               v-for="(postDto, k) in postDtos"
@@ -111,13 +89,33 @@ export default {
       postDtos: [],
       isPublic: false,
       isFriend: false,
-      isNotFriend: false,
     };
+  },
+  methods: {
+    addFriend() {
+      const url = `${store.state.API_LOCATION}/profile/addRequest/`;
+      axios
+        .post(
+          url,
+          {
+            requestorId: localStorage.getItem("userId"),
+            userId: localStorage.getItem("profileId"),
+          },
+          store.state.getTokenConfig()
+        )
+        .then((res) => res.data)
+        .then((data) => {
+          console.log(data);
+        });
+    },
   },
   mounted() {
     if (store.state.logout === true) {
       this.$router.push("/");
     }
+
+    if (localStorage.getItem("profileId") === localStorage.getItem("userId"))
+      this.$router.push("/profile");
 
     const profileUrl = `${
       store.state.API_LOCATION
@@ -148,10 +146,16 @@ export default {
       .get(getFriendsList, store.state.getTokenConfig())
       .then((res) => res.data)
       .then((data) => {
-        if (data.indexOf(localStorage.getItem("profileId") != -1)) {
-          this.isFriend = true;
+        console.log(data);
+        console.log(localStorage.getItem("profileId"));
+        console.log(data.indexOf(localStorage.getItem("profileId")));
+        if (data.indexOf(localStorage.getItem("profileId")) === -1) {
+          this.isFriend = false;
+          console.log(this.isFriend);
         } else {
-          this.isNotFriend = true;
+          this.isFriend = true;
+          console.log(this.isFriend);
+          this.isPublic = true;
         }
       });
   },

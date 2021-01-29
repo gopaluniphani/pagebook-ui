@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-4">
+        <div class="col-lg-4">
           <table class="table" style="caption-side: top">
             <caption>
               Business Details
@@ -42,9 +42,9 @@
             </tbody>
           </table>
         </div>
-        <div class="col-8">
-          <div class="row">
-            <div class="col-4">
+        <div class="col-lg-8">
+          <div class="row mb-5">
+            <div class="col-3">
               <button
                 v-if="isModerator"
                 v-on:click="loadApprovedPosts()"
@@ -53,7 +53,7 @@
                 Approved Posts
               </button>
             </div>
-            <div class="col-4">
+            <div class="col-3">
               <button
                 v-if="isModerator"
                 v-on:click="loadUnApprovedPosts()"
@@ -62,69 +62,32 @@
                 Unapproved Posts
               </button>
             </div>
-            <div class="col-4">
-              <!-- Button trigger modal -->
-              <button
-                type="button"
-                class="btn btn-light"
-                data-toggle="modal"
-                data-target="#addModerator"
-                v-if="isAdmin"
-              >
-                Launch demo modal
-              </button>
+            <div class="col-3">
+              <router-link to="/addBusinessPost">
+                <button class="btn btn-light">Add Business Post</button>
+              </router-link>
+            </div>
+            <div class="col-3">
+              <div>
+                <b-button v-if="isAdmin" class="btn btn-light" v-b-modal.modal-1
+                  >Add Moderator</b-button
+                >
 
-              <!-- Modal -->
-              <div
-                class="modal fade"
-                id="addModerator"
-                tabindex="-1"
-                role="dialog"
-                aria-labelledby="addModeratoraLabel"
-                aria-hidden="true"
-              >
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="addModeratorLabel">
-                        Add Moderator
-                      </h5>
-                      <button
-                        type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <form v-on:submit="addModerator($event)">
-                        <input
-                          name=""
-                          class="form-control"
-                          placeholder="Enter Moderator Email"
-                          v-model="email"
-                          type="email"
-                        />
-                        <input type="text" disabled v-model="message" />
-                      </form>
-                    </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                        v-on:click="clearMessage"
-                      >
-                        Close
-                      </button>
-                      <button type="button" class="btn btn-primary">
-                        Save changes
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                <b-modal id="modal-1" title="Add Moderator">
+                  <form v-on:submit="addModerator($event)">
+                    <input
+                      name=""
+                      class="form-control"
+                      placeholder="Enter Moderator Email"
+                      v-model="email"
+                      type="email"
+                    />
+                    <button type="submit" class="btn btn-light mt-2">
+                      Submit
+                    </button>
+                    <p class="mt-2" type="text" disabled :value="message" />
+                  </form>
+                </b-modal>
               </div>
             </div>
           </div>
@@ -184,8 +147,13 @@ export default {
         .then((data) => {
           console.log(data);
           this.businessProfile = data;
-          if (store.state.userDetails.email === data.adminEmail)
+          if (store.state.userDetails.email === data.adminEmail) {
             this.isAdmin = true;
+            this.isModerator = true;
+          } else {
+            this.isAdmin = false;
+            this.isModerator = false;
+          }
         });
 
       axios
@@ -195,9 +163,14 @@ export default {
         )
         .then((res) => res.data)
         .then((data) => {
+          console.log(data);
           const moderatorsList = data.moderators;
-          if (moderatorsList.indexOf(store.state.userDetails.email) != -1) {
+          if (moderatorsList.indexOf(store.state.userDetails.email) !== -1) {
             this.isModerator = true;
+            this.isAdmin = false;
+          } else {
+            this.isModerator = false;
+            this.isAdmin = false;
           }
         });
 
@@ -214,6 +187,7 @@ export default {
         .then((data) => {
           console.log(data);
           this.approvedPostDtos = data;
+          this.unApprovedPostDtos = [];
         });
     },
     loadUnApprovedPosts() {
@@ -225,6 +199,7 @@ export default {
         .then((data) => {
           console.log(data);
           this.unApprovedPostDtos = data;
+          this.approvedPostDtos = [];
         });
     },
     addModerator(event) {
@@ -245,8 +220,8 @@ export default {
             .then((res) => {
               console.log(res.data);
               if (res.data === null)
-                this.messsage = "User with this email doesn't exist";
-              else this.message = "Added moderator successfully";
+                alert("User with this email doesn't exist");
+              else alert("Added moderator successfully");
             });
         });
     },
